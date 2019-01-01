@@ -1,3 +1,5 @@
+/*BASIC LOGIC THAT IS MADE EASIER BY EXPRESS- THIS LOGIC USED FOR LESSON*/
+
 //Import http module
 const http = require('http');
 const fs = require("fs");
@@ -16,11 +18,21 @@ const method = req.method;
     }
 
     if (url === "/message" && method === "POST") {
-        fs.writeFileSync("message.text" , "Dummy");
-        res.statusCode = 302;
-        res.setHeader("Location", "/");
-        return res.end();
-    }
+        const body = [];
+        req.on("data", (chunk) => {
+            console.log(chunk);
+            body.push(chunk);
+        });
+        return req.on("end", () => {
+            const parseBody = Buffer.concat(body).toString();
+            const message = parseBody.split("=")[1];
+            fs.writeFile("message.text", message, err => {
+                res.statusCode = 302;
+                res.setHeader("Location", "/");
+                return res.end();
+            });
+        });
+    };
     
     res.setHeader('Content-Type', 'text/html');
     res.write('<html>');
@@ -28,17 +40,7 @@ const method = req.method;
     res.write('<body><h1>Hello from my Node.js server!</h1></body>');
     res.write('</html>');
     res.end();
-    //This will quit the server - lesson purposes only
 });
-
-/*The old JS way to write this:
-function rqListener(request, response) {
-
-}
-
-http.createServer(rqListener);
-
-*/
 
 
 //Listen for requests - takes arguments for ports, hostnames, etc but dev no host name defaults to localhost (this machine). Test in browser by navigating to localhost:3000
