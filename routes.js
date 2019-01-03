@@ -14,6 +14,7 @@ const requestHandler = (req, res) => {
         return res.end();
     }
     
+    /* /message page is in the form action above*/
     if (url === "/message" && method === "POST") {
         const body = [];
         req.on("data", (chunk) => {
