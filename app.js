@@ -6,10 +6,12 @@ const path = require('path');
 //register express in this file
 const app = express();
 
-//import routes files:
-const adminRoutes = require('./routes/admin.js');
-const shopRoutes = require('./routes/shop.js');
+app.set('view engine', 'pug');//activat templating engine
+app.set('views', 'views');//tell templating engine where to find templates
 
+//import routes files:
+const adminData = require('./routes/admin.js');
+const shopRoutes = require('./routes/shop.js');
 
 
 //register parsing handler:
@@ -19,12 +21,12 @@ app.use(bodyparser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //register routes from routes variables:
-app.use('/admin', adminRoutes);
+app.use('/admin', adminData.routes);
 app.use(shopRoutes);
 
 //page not found send status 404-no path filter to catch all unknown urls:
 app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+    res.status(404).render('404', {pageTitle: 'Page Not Found'});
 });
 
 //start server:
