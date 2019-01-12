@@ -6,7 +6,7 @@ const path = require('path');
 //register express in this file
 const app = express();
 
-app.set('view engine', 'pug');//activat templating engine
+app.set('view engine', 'ejs');//activate templating engine (EJS)
 app.set('views', 'views');//tell templating engine where to find templates
 
 //import routes files:
@@ -26,7 +26,7 @@ app.use(shopRoutes);
 
 //page not found send status 404-no path filter to catch all unknown urls:
 app.use((req, res, next) => {
-    res.status(404).render('404', {pageTitle: 'Page Not Found'});
+    res.status(404).render('404', {pageTitle: 'Page Not Found with EJS'});
 });
 
 //start server:
